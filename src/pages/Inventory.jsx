@@ -38,6 +38,27 @@ export default function Inventory() {
 
   useEffect(() => {
     fetchItems();
+
+    /* 🔥 REAL-TIME SUBSCRIPTION */
+    const channel = supabase
+      .channel("products-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "products",
+        },
+        (payload) => {
+          // Re-fetch fresh data on any change
+          fetchItems();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   /* UPDATE STOCK */
@@ -51,8 +72,6 @@ export default function Inventory() {
 
     if (error) {
       toast.error("Stock update failed");
-    } else {
-      fetchItems();
     }
   };
 
@@ -118,14 +137,8 @@ export default function Inventory() {
 
   /* FORMAT */
   const formatNumber = (num) => {
-    if (num >= 1000000) {
-      return `${(num / 1000000).toFixed(1)}M`;
-    }
-
-    if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}K`;
-    }
-
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
     return num;
   };
 
@@ -136,26 +149,20 @@ export default function Inventory() {
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
         <div>
-          <h1 className="text-4xl font-black">
-            Inventory
-          </h1>
-
+          <h1 className="text-4xl font-black">Inventory</h1>
           <p className="text-gray-500 dark:text-white/50 text-sm mt-1">
             Manage products, stock, models & quality
           </p>
         </div>
 
         {/* SEARCH */}
-        <div
-          className="
-            flex items-center gap-3
-            px-4 py-3
-            rounded-2xl
-            border border-black/10 dark:border-white/10
-            bg-white dark:bg-[#0a0a0a]
-            w-full lg:w-[320px]
-          "
-        >
+        <div className="
+          flex items-center gap-3
+          px-4 py-3 rounded-2xl
+          border border-black/10 dark:border-white/10
+          bg-white dark:bg-[#0a0a0a]
+          w-full lg:w-[320px]
+        ">
           <FaSearch className="text-gray-400" />
 
           <input
@@ -163,12 +170,7 @@ export default function Inventory() {
             placeholder="Search inventory..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="
-              bg-transparent outline-none
-              w-full
-              text-sm
-              placeholder:text-gray-400
-            "
+            className="bg-transparent outline-none w-full text-sm placeholder:text-gray-400"
           />
         </div>
 
@@ -177,130 +179,24 @@ export default function Inventory() {
       {/* SUMMARY */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
 
-        {/* PRODUCTS */}
-        <motion.div
-          whileHover={{ y: -5 }}
-          className="
-            rounded-3xl
-            border border-black/10 dark:border-white/10
-            bg-white dark:bg-[#0a0a0a]
-            p-5
-            relative overflow-hidden
-          "
-        >
-
-          <div className="absolute -top-10 -right-10 h-40 w-40 bg-blue-500/10 blur-3xl" />
-
-          <div className="relative z-10 flex justify-between">
-
-            <div>
-              <p className="text-sm text-gray-500 dark:text-white/50">
-                Total Products
-              </p>
-
-              <h2 className="text-4xl font-black mt-3 break-words">
-                {formatNumber(items.length)}
-              </h2>
-            </div>
-
-            <div
-              className="
-                h-14 w-14 rounded-2xl
-                bg-blue-500/10
-                text-blue-500
-                flex items-center justify-center
-                text-xl
-              "
-            >
-              <FaBox />
-            </div>
-
-          </div>
-
+        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5">
+          <div className="text-sm text-gray-500">Total Products</div>
+          <div className="text-4xl font-black mt-3">{items.length}</div>
+          <FaBox className="text-blue-500 text-2xl mt-4" />
         </motion.div>
 
-        {/* STOCK */}
-        <motion.div
-          whileHover={{ y: -5 }}
-          className="
-            rounded-3xl
-            border border-black/10 dark:border-white/10
-            bg-white dark:bg-[#0a0a0a]
-            p-5
-            relative overflow-hidden
-          "
-        >
-
-          <div className="absolute -top-10 -right-10 h-40 w-40 bg-green-500/10 blur-3xl" />
-
-          <div className="relative z-10 flex justify-between">
-
-            <div>
-              <p className="text-sm text-gray-500 dark:text-white/50">
-                Total Stock
-              </p>
-
-              <h2 className="text-4xl font-black mt-3 break-words">
-                {formatNumber(totalStock)}
-              </h2>
-            </div>
-
-            <div
-              className="
-                h-14 w-14 rounded-2xl
-                bg-green-500/10
-                text-green-500
-                flex items-center justify-center
-                text-xl
-              "
-            >
-              <FaWarehouse />
-            </div>
-
-          </div>
-
+        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5">
+          <div className="text-sm text-gray-500">Total Stock</div>
+          <div className="text-4xl font-black mt-3">{totalStock}</div>
+          <FaWarehouse className="text-green-500 text-2xl mt-4" />
         </motion.div>
 
-        {/* LOW STOCK */}
-        <motion.div
-          whileHover={{ y: -5 }}
-          className="
-            rounded-3xl
-            border border-red-500/20
-            bg-white dark:bg-[#0a0a0a]
-            p-5
-            relative overflow-hidden
-          "
-        >
-
-          <div className="absolute -top-10 -right-10 h-40 w-40 bg-red-500/10 blur-3xl" />
-
-          <div className="relative z-10 flex justify-between">
-
-            <div>
-              <p className="text-sm text-gray-500 dark:text-white/50">
-                Low Stock
-              </p>
-
-              <h2 className="text-4xl font-black mt-3 break-words text-red-500">
-                {formatNumber(lowStockItems.length)}
-              </h2>
-            </div>
-
-            <div
-              className="
-                h-14 w-14 rounded-2xl
-                bg-red-500/10
-                text-red-500
-                flex items-center justify-center
-                text-xl
-              "
-            >
-              <FaExclamationTriangle />
-            </div>
-
+        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5">
+          <div className="text-sm text-gray-500">Low Stock</div>
+          <div className="text-4xl font-black mt-3 text-red-500">
+            {lowStockItems.length}
           </div>
-
+          <FaExclamationTriangle className="text-red-500 text-2xl mt-4" />
         </motion.div>
 
       </div>
@@ -308,19 +204,9 @@ export default function Inventory() {
       {/* ITEMS */}
       {loading ? (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-
           {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="
-                h-[320px]
-                rounded-3xl
-                bg-black/5 dark:bg-white/5
-                animate-pulse
-              "
-            />
+            <div key={i} className="h-[320px] rounded-3xl bg-black/5 dark:bg-white/5 animate-pulse" />
           ))}
-
         </div>
       ) : (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -332,170 +218,54 @@ export default function Inventory() {
               <motion.div
                 key={item.id}
                 whileHover={{ y: -5 }}
-                className={`
-                  relative overflow-hidden
-                  rounded-3xl
-                  border
-                  p-5
-                  transition-all duration-300
-
-                  ${
-                    lowStock
-                      ? "border-red-500/20 bg-red-500/[0.04]"
-                      : "border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a]"
-                  }
-                `}
+                className={`rounded-3xl p-5 border ${
+                  lowStock
+                    ? "border-red-500/20 bg-red-500/5"
+                    : "border-black/10 dark:border-white/10"
+                }`}
               >
 
-                {/* GLOW */}
-                <div
-                  className={`
-                    absolute -top-10 -right-10
-                    h-40 w-40 blur-3xl opacity-20
+                <h2 className="font-black text-xl">{item.product_name}</h2>
 
-                    ${
-                      lowStock
-                        ? "bg-red-500"
-                        : "bg-blue-500"
-                    }
-                  `}
+                <div className="flex gap-2 mt-2 text-xs">
+                  <span className="text-blue-500">{item.bike_type}</span>
+                  <span className="text-yellow-500">{item.quality}</span>
+                  <span className="text-green-500">{item.model}</span>
+                </div>
+
+                <div className="text-2xl font-black mt-3">
+                  {item.stock}
+                </div>
+
+                {/* INPUT */}
+                <input
+                  type="number"
+                  value={inputs[item.id] || ""}
+                  onChange={(e) =>
+                    setInputs({
+                      ...inputs,
+                      [item.id]: e.target.value,
+                    })
+                  }
+                  className="w-full mt-4 p-3 rounded-xl bg-gray-100 dark:bg-black/30"
+                  placeholder="Qty"
                 />
 
-                <div className="relative z-10">
+                <div className="flex gap-3 mt-4">
 
-                  {/* TOP */}
-                  <div className="flex justify-between items-start gap-3">
+                  <button
+                    onClick={() => addStock(item)}
+                    className="flex-1 bg-green-500 py-2 rounded-xl flex items-center justify-center gap-2"
+                  >
+                    <FaArrowUp /> Add
+                  </button>
 
-                    <div className="min-w-0">
-
-                      <h2
-                        className="
-                          text-xl font-black
-                          leading-tight
-                          break-words
-                        "
-                      >
-                        {item.product_name}
-                      </h2>
-
-                      <div className="flex flex-wrap gap-2 mt-3">
-
-                        <span
-                          className="
-                            px-3 py-1 rounded-full
-                            text-xs font-bold
-                            bg-blue-500/10 text-blue-500
-                          "
-                        >
-                          {item.bike_type}
-                        </span>
-
-                        <span
-                          className="
-                            px-3 py-1 rounded-full
-                            text-xs font-bold
-                            bg-yellow-500/10 text-yellow-500
-                          "
-                        >
-                          {item.quality}
-                        </span>
-
-                        <span
-                          className="
-                            px-3 py-1 rounded-full
-                            text-xs font-bold
-                            bg-green-500/10 text-green-500
-                          "
-                        >
-                          {item.model || "NEW"}
-                        </span>
-
-                      </div>
-
-                    </div>
-
-                    <div
-                      className={`
-                        px-4 py-2 rounded-2xl
-                        font-black text-xl
-
-                        ${
-                          lowStock
-                            ? "bg-red-500/10 text-red-500"
-                            : "bg-green-500/10 text-green-500"
-                        }
-                      `}
-                    >
-                      {formatNumber(item.stock)}
-                    </div>
-
-                  </div>
-
-                  {/* INPUT */}
-                  <div className="mt-6">
-
-                    <input
-                      type="number"
-                      placeholder="Enter quantity"
-                      value={inputs[item.id] || ""}
-                      onChange={(e) =>
-                        setInputs({
-                          ...inputs,
-                          [item.id]: e.target.value,
-                        })
-                      }
-                      className="
-                        w-full
-                        rounded-2xl
-                        px-4 py-3
-                        outline-none
-                        border border-black/10 dark:border-white/10
-                        bg-gray-100 dark:bg-black/30
-                        text-black dark:text-white
-                        placeholder:text-gray-400
-                      "
-                    />
-
-                  </div>
-
-                  {/* BUTTONS */}
-                  <div className="flex gap-3 mt-5">
-
-                    <button
-                      onClick={() => addStock(item)}
-                      className="
-                        flex-1
-                        py-3 rounded-2xl
-                        bg-green-500
-                        hover:bg-green-600
-                        text-black
-                        font-black
-                        transition-all duration-300
-                        flex items-center justify-center gap-2
-                      "
-                    >
-                      <FaArrowUp />
-                      Add
-                    </button>
-
-                    <button
-                      onClick={() => deductStock(item)}
-                      className="
-                        flex-1
-                        py-3 rounded-2xl
-                        bg-red-500
-                        hover:bg-red-600
-                        text-black
-                        font-black
-                        transition-all duration-300
-                        flex items-center justify-center gap-2
-                      "
-                    >
-                      <FaArrowDown />
-                      Deduct
-                    </button>
-
-                  </div>
+                  <button
+                    onClick={() => deductStock(item)}
+                    className="flex-1 bg-red-500 py-2 rounded-xl flex items-center justify-center gap-2"
+                  >
+                    <FaArrowDown /> Deduct
+                  </button>
 
                 </div>
 
@@ -505,6 +275,7 @@ export default function Inventory() {
 
         </div>
       )}
+
     </div>
   );
 }
