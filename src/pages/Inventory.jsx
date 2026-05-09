@@ -10,6 +10,7 @@ import {
   FaArrowDown,
   FaExclamationTriangle,
   FaSearch,
+  FaFilter,
 } from "react-icons/fa";
 
 export default function Inventory() {
