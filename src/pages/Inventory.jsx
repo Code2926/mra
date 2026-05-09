@@ -39,7 +39,6 @@ export default function Inventory() {
   useEffect(() => {
     fetchItems();
 
-    /* 🔥 REAL-TIME SUBSCRIPTION */
     const channel = supabase
       .channel("products-realtime")
       .on(
@@ -49,8 +48,7 @@ export default function Inventory() {
           schema: "public",
           table: "products",
         },
-        (payload) => {
-          // Re-fetch fresh data on any change
+        () => {
           fetchItems();
         }
       )
@@ -115,7 +113,6 @@ export default function Inventory() {
     });
   };
 
-  /* TOTALS */
   const totalStock = items.reduce(
     (sum, item) => sum + Number(item.stock || 0),
     0
@@ -123,7 +120,6 @@ export default function Inventory() {
 
   const lowStockItems = items.filter((item) => item.stock <= 5);
 
-  /* SEARCH */
   const filteredItems = items.filter((item) =>
     `
       ${item.product_name}
@@ -134,13 +130,6 @@ export default function Inventory() {
       .toLowerCase()
       .includes(search.toLowerCase())
   );
-
-  /* FORMAT */
-  const formatNumber = (num) => {
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
-    return num;
-  };
 
   return (
     <div className="space-y-6 text-black dark:text-white">
@@ -155,22 +144,14 @@ export default function Inventory() {
           </p>
         </div>
 
-        {/* SEARCH */}
-        <div className="
-          flex items-center gap-3
-          px-4 py-3 rounded-2xl
-          border border-black/10 dark:border-white/10
-          bg-white dark:bg-[#0a0a0a]
-          w-full lg:w-[320px]
-        ">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border bg-white dark:bg-[#0a0a0a] w-full lg:w-[320px]">
           <FaSearch className="text-gray-400" />
-
           <input
             type="text"
             placeholder="Search inventory..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-transparent outline-none w-full text-sm placeholder:text-gray-400"
+            className="bg-transparent outline-none w-full text-sm"
           />
         </div>
 
@@ -179,24 +160,33 @@ export default function Inventory() {
       {/* SUMMARY */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
 
-        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5">
-          <div className="text-sm text-gray-500">Total Products</div>
-          <div className="text-4xl font-black mt-3">{items.length}</div>
-          <FaBox className="text-blue-500 text-2xl mt-4" />
-        </motion.div>
-
-        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5">
-          <div className="text-sm text-gray-500">Total Stock</div>
-          <div className="text-4xl font-black mt-3">{totalStock}</div>
-          <FaWarehouse className="text-green-500 text-2xl mt-4" />
-        </motion.div>
-
-        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5">
-          <div className="text-sm text-gray-500">Low Stock</div>
-          <div className="text-4xl font-black mt-3 text-red-500">
-            {lowStockItems.length}
+        {/* CARD 1 */}
+        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5 flex justify-between items-center">
+          <div>
+            <div className="text-sm text-gray-500">Total Products</div>
+            <div className="text-4xl font-black mt-3">{items.length}</div>
           </div>
-          <FaExclamationTriangle className="text-red-500 text-2xl mt-4" />
+          <FaBox className="text-blue-500 text-3xl" />
+        </motion.div>
+
+        {/* CARD 2 */}
+        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5 flex justify-between items-center">
+          <div>
+            <div className="text-sm text-gray-500">Total Stock</div>
+            <div className="text-4xl font-black mt-3">{totalStock}</div>
+          </div>
+          <FaWarehouse className="text-green-500 text-3xl" />
+        </motion.div>
+
+        {/* CARD 3 */}
+        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5 flex justify-between items-center">
+          <div>
+            <div className="text-sm text-gray-500">Low Stock</div>
+            <div className="text-4xl font-black mt-3 text-red-500">
+              {lowStockItems.length}
+            </div>
+          </div>
+          <FaExclamationTriangle className="text-red-500 text-3xl" />
         </motion.div>
 
       </div>
@@ -237,7 +227,6 @@ export default function Inventory() {
                   {item.stock}
                 </div>
 
-                {/* INPUT */}
                 <input
                   type="number"
                   value={inputs[item.id] || ""}
