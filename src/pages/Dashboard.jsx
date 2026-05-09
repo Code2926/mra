@@ -449,20 +449,6 @@ export default function Dashboard() {
 
     <div className="flex items-center gap-3">
 
-      <div
-        className="
-          h-14 w-14 rounded-3xl
-          bg-gradient-to-br from-red-500/20 to-orange-500/20
-          text-red-500
-          flex items-center justify-center
-          text-2xl
-          shadow-lg shadow-red-500/10
-          border border-red-500/10
-        "
-      >
-        <FaExclamationTriangle />
-      </div>
-
       <div>
         <h2 className="text-2xl font-black tracking-tight">
           Low Stock
