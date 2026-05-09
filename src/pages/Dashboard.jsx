@@ -37,29 +37,15 @@ const COLORS = [
   "#06b6d4",
 ];
 
-/* FORMAT LARGE NUMBERS */
+/* FORMAT */
 const formatNumber = (num) => {
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + "M";
-  }
-
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1) + "K";
-  }
-
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
   return num;
 };
 
 /* CARD */
-const Card = ({
-  title,
-  value,
-  icon,
-  trend,
-  danger,
-  iconBg,
-  iconColor,
-}) => {
+const Card = ({ title, value, icon, trend, danger, iconBg, iconColor }) => {
   return (
     <motion.div
       whileHover={{ y: -5, scale: 1.01 }}
@@ -69,16 +55,12 @@ const Card = ({
         bg-gray-50 dark:bg-[#0a0a0a]
         text-black dark:text-white
         backdrop-blur-xl p-5
-        transition-all duration-300
-        shadow-sm
       "
     >
-      {/* glow */}
       <div
-        className={`
-          absolute -top-10 -right-10 h-40 w-40 blur-3xl opacity-20
-          ${danger ? "bg-red-500" : "bg-green-500"}
-        `}
+        className={`absolute -top-10 -right-10 h-40 w-40 blur-3xl opacity-20 ${
+          danger ? "bg-red-500" : "bg-green-500"
+        }`}
       />
 
       <div className="relative z-10 flex justify-between items-start gap-3">
@@ -105,14 +87,10 @@ const Card = ({
           </div>
         </div>
 
-        {/* ICON */}
         <div
           className={`
-            h-14 w-14 rounded-2xl
-            flex items-center justify-center
-            text-2xl shadow-sm
-            ${iconBg}
-            ${iconColor}
+            h-14 w-14 rounded-2xl flex items-center justify-center text-2xl
+            ${iconBg} ${iconColor}
           `}
         >
           {icon}
@@ -122,10 +100,9 @@ const Card = ({
   );
 };
 
-/* MAIN DASHBOARD */
+/* MAIN */
 export default function Dashboard() {
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(true);
 
   const [stats, setStats] = useState({
@@ -141,14 +118,12 @@ export default function Dashboard() {
   const [weeklyData, setWeeklyData] = useState([]);
   const [pieData, setPieData] = useState([]);
 
-  /* FETCH */
   const fetchDashboard = async () => {
     try {
       setLoading(true);
 
       const [productsRes, billsRes] = await Promise.all([
         supabase.from("products").select("*"),
-
         supabase
           .from("bills")
           .select("*")
@@ -159,19 +134,10 @@ export default function Dashboard() {
       const products = productsRes.data || [];
       const bills = billsRes.data || [];
 
-      const totalStock = products.reduce(
-        (s, p) => s + Number(p.stock || 0),
-        0
-      );
+      const totalStock = products.reduce((s, p) => s + Number(p.stock || 0), 0);
+      const totalSales = bills.reduce((s, b) => s + Number(b.total_amount || 0), 0);
 
-      const totalSales = bills.reduce(
-        (s, b) => s + Number(b.total_amount || 0),
-        0
-      );
-
-      const lowStock = products.filter(
-        (p) => Number(p.stock || 0) <= 5
-      );
+      const lowStock = products.filter((p) => Number(p.stock || 0) <= 5);
 
       setStats({
         totalProducts: products.length,
@@ -184,27 +150,16 @@ export default function Dashboard() {
       setRecentBills(bills);
       setLowStockItems(lowStock);
 
-      /* WEEKLY */
       const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
       const weeklyMap = {};
 
       bills.forEach((b) => {
         const day = days[new Date(b.created_at).getDay()];
-
-        weeklyMap[day] =
-          (weeklyMap[day] || 0) +
-          Number(b.total_amount || 0);
+        weeklyMap[day] = (weeklyMap[day] || 0) + Number(b.total_amount || 0);
       });
 
-      setWeeklyData(
-        days.map((d) => ({
-          name: d,
-          sales: weeklyMap[d] || 0,
-        }))
-      );
+      setWeeklyData(days.map((d) => ({ name: d, sales: weeklyMap[d] || 0 })));
 
-      /* PIE */
       setPieData(
         products.map((p) => ({
           name: p.product_name,
@@ -222,324 +177,138 @@ export default function Dashboard() {
     fetchDashboard();
   }, []);
 
-  /* LOADING */
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
         {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="
-              h-32 rounded-3xl
-              bg-gray-200 dark:bg-white/5
-              animate-pulse
-            "
-          />
+          <div key={i} className="h-32 rounded-3xl bg-gray-200 dark:bg-white/5 animate-pulse" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 text-black dark:text-white transition-colors duration-300">
+    <div className="space-y-6 text-black dark:text-white">
 
       {/* HEADER */}
       <div className="flex justify-between items-end flex-wrap gap-4">
-
         <div>
-          <h1 className="text-4xl font-black">
-            Dashboard
-          </h1>
-
+          <h1 className="text-4xl font-black">Dashboard</h1>
           <p className="text-gray-500 dark:text-white/50 text-sm">
             Real-time analytics overview
           </p>
         </div>
 
-        {/* REFRESH */}
+        {/* 🔥 RESPONSIVE BUTTON FIX */}
         <button
           onClick={fetchDashboard}
           className="
-            flex items-center gap-2
-            px-5 py-3 rounded-2xl
+            flex items-center justify-center gap-2
+            px-4 sm:px-5 py-3 rounded-2xl
             border border-gray-200 dark:border-white/10
             bg-gray-100 dark:bg-white/5
-            hover:scale-105
-            transition-all duration-300
-            text-black dark:text-white
+            hover:scale-105 transition-all duration-300
           "
         >
           <FaSyncAlt />
-          Refresh
+          <span className="hidden sm:inline">Refresh</span>
         </button>
       </div>
 
       {/* CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
-
-        <Card
-          title="Products"
-          value={stats.totalProducts}
-          icon={<FaBox />}
-          trend="+12%"
-          iconBg="bg-blue-500/15"
-          iconColor="text-blue-500"
-        />
-
-        <Card
-          title="Stock"
-          value={stats.totalStock}
-          icon={<FaWarehouse />}
-          trend="+8%"
-          iconBg="bg-green-500/15"
-          iconColor="text-green-500"
-        />
-
-        <Card
-          title="Revenue"
-          value={stats.totalSales}
-          icon={<FaRupeeSign />}
-          trend="+24%"
-          iconBg="bg-yellow-500/15"
-          iconColor="text-yellow-500"
-        />
-
-        <Card
-          title="Bills"
-          value={stats.totalBills}
-          icon={<FaShoppingCart />}
-          trend="+5%"
-          iconBg="bg-purple-500/15"
-          iconColor="text-purple-500"
-        />
-
-        <Card
-          title="Low Stock"
-          value={stats.lowStock}
-          icon={<FaExclamationTriangle />}
-          trend="Alert"
-          danger
-          iconBg="bg-red-500/15"
-          iconColor="text-red-500"
-        />
-
+        <Card title="Products" value={stats.totalProducts} icon={<FaBox />} trend="+12%" iconBg="bg-blue-500/15" iconColor="text-blue-500" />
+        <Card title="Stock" value={stats.totalStock} icon={<FaWarehouse />} trend="+8%" iconBg="bg-green-500/15" iconColor="text-green-500" />
+        <Card title="Revenue" value={stats.totalSales} icon={<FaRupeeSign />} trend="+24%" iconBg="bg-yellow-500/15" iconColor="text-yellow-500" />
+        <Card title="Bills" value={stats.totalBills} icon={<FaShoppingCart />} trend="+5%" iconBg="bg-purple-500/15" iconColor="text-purple-500" />
+        <Card title="Low Stock" value={stats.lowStock} icon={<FaExclamationTriangle />} trend="Alert" danger iconBg="bg-red-500/15" iconColor="text-red-500" />
       </div>
 
       {/* CHARTS */}
       <div className="grid grid-cols-1 2xl:grid-cols-3 gap-6">
 
-        {/* AREA CHART */}
-        <div className="
-          2xl:col-span-2
-          p-6 rounded-3xl
-          border border-gray-200 dark:border-white/10
-          bg-gray-50 dark:bg-[#0a0a0a]
-        ">
+        {/* 🔥 RESPONSIVE CHART FIX */}
+        <div className="2xl:col-span-2 p-6 rounded-3xl border bg-gray-50 dark:bg-[#0a0a0a]">
+          <h2 className="font-bold mb-4">Weekly Revenue</h2>
 
-          <h2 className="font-bold mb-4">
-            Weekly Revenue
-          </h2>
-
-          <div className="h-[320px]">
-
+          <div className="h-[250px] sm:h-[300px] md:h-[340px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={weeklyData}>
-
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  opacity={0.2}
-                />
-
+                <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                 <XAxis dataKey="name" />
                 <YAxis />
-
                 <Tooltip />
-
-                <Area
-                  dataKey="sales"
-                  stroke="#22c55e"
-                  fill="#22c55e"
-                />
-
+                <Area dataKey="sales" stroke="#22c55e" fill="#22c55e" />
               </AreaChart>
             </ResponsiveContainer>
-
           </div>
         </div>
 
-        {/* PIE CHART */}
-        <div className="
-          p-6 rounded-3xl
-          border border-gray-200 dark:border-white/10
-          bg-gray-50 dark:bg-[#0a0a0a]
-        ">
-
-          <h2 className="font-bold mb-4">
-            Stock Distribution
-          </h2>
+        {/* PIE */}
+        <div className="p-6 rounded-3xl border bg-gray-50 dark:bg-[#0a0a0a]">
+          <h2 className="font-bold mb-4">Stock Distribution</h2>
 
           <div className="h-[320px]">
-
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-
-                <Pie
-                  data={pieData}
-                  dataKey="value"
-                  outerRadius={100}
-                >
+                <Pie data={pieData} dataKey="value" outerRadius={100}>
                   {pieData.map((_, i) => (
-                    <Cell
-                      key={i}
-                      fill={COLORS[i % COLORS.length]}
-                    />
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
-
                 <Tooltip />
-
               </PieChart>
             </ResponsiveContainer>
-
           </div>
         </div>
-
       </div>
 
       {/* LOWER GRID */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-        {/* LOW STOCK */}
-        <div className="
-          p-6 rounded-3xl
-          border border-gray-200 dark:border-white/10
-          bg-gray-50 dark:bg-[#0a0a0a]
-        ">
+        {/* 🔥 LOW STOCK FIXED 2-COLUMN ALWAYS */}
+        <div className="p-6 rounded-3xl border bg-gray-50 dark:bg-[#0a0a0a]">
+          <h2 className="font-bold mb-4">Low Stock</h2>
 
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold">
-              Low Stock
-            </h2>
-
-            <span className="text-sm text-red-500 font-semibold">
-              {lowStockItems.length} Items
-            </span>
-          </div>
-
-          <div className="space-y-3">
-
-            {lowStockItems.length === 0 ? (
-              <p className="text-gray-500 dark:text-white/50">
-                No low stock items
-              </p>
-            ) : (
-              lowStockItems.map((item) => (
-                <motion.div
-                  key={item.id}
-                  whileHover={{ scale: 1.01 }}
-                  className="
-                    p-4 rounded-2xl
-                    bg-red-500/5
-                    border border-red-500/10
-                    flex items-center justify-between gap-4
-                    transition-all duration-300
-                  "
-                >
-
-                  {/* LEFT SIDE */}
-                  <div className="min-w-0 flex-1">
-
-                    <p className="font-semibold text-black dark:text-white truncate">
-                      {item.product_name}
-                    </p>
-
-                    <p className="text-sm text-gray-500 dark:text-white/50 truncate">
-                      {item.bike_type} • {item.model || "Standard"}
-                    </p>
-
-                  </div>
-
-                  {/* RIGHT SIDE */}
-                  <div className="shrink-0 text-right">
-
-                    <p className="text-xs text-gray-500 dark:text-white/40">
-                      Stock
-                    </p>
-
-                    <p className="text-lg font-black text-red-500">
-                      {item.stock}
-                    </p>
-
-                  </div>
-
-                </motion.div>
-              ))
-            )}
-
+          <div className="grid grid-cols-2 gap-3">
+            {lowStockItems.map((item) => (
+              <div
+                key={item.id}
+                className="p-4 rounded-2xl bg-red-500/5 border border-red-500/10"
+              >
+                <p className="font-semibold truncate">{item.product_name}</p>
+                <p className="text-sm text-gray-500">
+                  {item.bike_type} • {item.model}
+                </p>
+                <p className="text-red-500 font-bold mt-1">{item.stock}</p>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* RECENT BILLS */}
-        <div className="
-          p-6 rounded-3xl
-          border border-gray-200 dark:border-white/10
-          bg-gray-50 dark:bg-[#0a0a0a]
-        ">
-
-          <h2 className="font-bold mb-4">
-            Recent Bills
-          </h2>
+        <div className="p-6 rounded-3xl border bg-gray-50 dark:bg-[#0a0a0a]">
+          <h2 className="font-bold mb-4">Recent Bills</h2>
 
           <div className="space-y-3">
-
-            {recentBills.length === 0 ? (
-              <p className="text-gray-500 dark:text-white/50">
-                No recent bills
-              </p>
-            ) : (
-              recentBills.map((bill) => (
-                <div
-                  key={bill.id}
-                  className="
-                    p-4 rounded-2xl
-                    bg-gray-100 dark:bg-white/5
-                    flex items-center justify-between gap-3
-                  "
-                >
-
-                  <div className="min-w-0">
-                    <p className="font-semibold truncate">
-                      {bill.client_name}
-                    </p>
-
-                    <p className="text-gray-500 dark:text-white/50 text-sm">
-                      #{bill.bill_number}
-                    </p>
-                  </div>
-
-                  {/* INVOICE BUTTON */}
-                  <button
-                    onClick={() =>
-                      navigate(`/invoice/${bill.id}`)
-                    }
-                    className="
-                      flex items-center gap-2
-                      px-4 py-2 rounded-xl
-                      bg-black text-white
-                      dark:bg-white dark:text-black
-                      hover:scale-105
-                      transition-all duration-300
-                      shrink-0
-                    "
-                  >
-                    <FaFileInvoice />
-                    Invoice
-                  </button>
-
+            {recentBills.map((bill) => (
+              <div
+                key={bill.id}
+                className="p-4 rounded-2xl bg-white/5 flex justify-between"
+              >
+                <div>
+                  <p className="font-semibold">{bill.client_name}</p>
+                  <p className="text-sm text-gray-500">#{bill.bill_number}</p>
                 </div>
-              ))
-            )}
 
+                <button
+                  onClick={() => navigate(`/invoice/${bill.id}`)}
+                  className="px-4 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black"
+                >
+                  Invoice
+                </button>
+              </div>
+            ))}
           </div>
         </div>
 
