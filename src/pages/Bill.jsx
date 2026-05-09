@@ -393,10 +393,6 @@ export default function Bill() {
               <h3 className="text-2xl font-black tracking-tight">
                 Search & Filters
               </h3>
-
-              <p className="text-sm text-gray-500 dark:text-white/50 mt-1">
-                Quickly find exact products with smart filters
-              </p>
             </div>
           </div>
 
