@@ -169,7 +169,7 @@ export default function Inventory() {
       </div>
 
       {/* SUMMARY */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="col-span-full xl:col-span-3">
 
         {/* CARD 1 */}
         <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5 flex justify-between items-center">
