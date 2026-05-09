@@ -373,111 +373,149 @@ export default function Bill() {
 
       </div>
 
-      {/* SEARCH + FILTER BAR */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="col-span-full relative overflow-hidden rounded-[32px] border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#0a0a0a]/90 backdrop-blur-xl p-5 shadow-2xl shadow-black/5"
+      {/* FIXED: SEARCH + FILTER BAR */}
+<motion.div
+  initial={{ opacity: 0, y: 15 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3 }}
+  className="col-span-full relative overflow-hidden rounded-[32px] border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#0a0a0a]/90 backdrop-blur-xl p-5 shadow-2xl shadow-black/5"
+>
+  {/* BACKGROUND GLOW */}
+  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/[0.03] via-purple-500/[0.03] to-cyan-500/[0.03] pointer-events-none" />
+
+  {/* EXTRA SOFT ORB GLOW */}
+  <div className="absolute -top-20 -left-20 h-60 w-60 bg-blue-500/10 blur-3xl" />
+  <div className="absolute -bottom-20 -right-20 h-60 w-60 bg-purple-500/10 blur-3xl" />
+
+  {/* TOP SECTION */}
+  <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5">
+
+    <div className="flex items-center gap-3">
+
+      <div className="h-14 w-14 rounded-3xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-blue-500 flex items-center justify-center text-2xl shadow-lg shadow-blue-500/10 border border-blue-500/10">
+        <FaFilter />
+      </div>
+
+      <div>
+        <h3 className="text-2xl font-black tracking-tight">
+          Search & Filters
+        </h3>
+        <p className="text-xs text-gray-500 dark:text-white/40">
+          Quickly filter inventory data
+        </p>
+      </div>
+
+    </div>
+
+    <button
+      onClick={() => {
+        setSearch("");
+        setBikeFilter("");
+        setQualityFilter("");
+        setModelFilter("");
+      }}
+      className="px-5 py-3 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-500 font-bold text-sm transition-all duration-300 border border-red-500/10 hover:scale-[1.02]"
+    >
+      Clear Filters
+    </button>
+
+  </div>
+
+  {/* FILTER GRID */}
+  <div className="relative grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+
+    {/* SEARCH */}
+    <div className="group flex items-center gap-3 px-5 py-4 rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] focus-within:border-blue-500/40 focus-within:shadow-lg focus-within:shadow-blue-500/10 transition-all duration-300">
+
+      <div className="h-11 w-11 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-lg group-focus-within:scale-110 transition-all duration-300">
+        <FaSearch />
+      </div>
+
+      <div className="flex-1">
+        <p className="text-xs text-gray-500 dark:text-white/40 mb-1">
+          Search Product
+        </p>
+
+        <input
+          type="text"
+          placeholder="Type product name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="bg-transparent outline-none w-full text-sm font-medium placeholder:text-gray-400"
+        />
+      </div>
+
+    </div>
+
+    {/* BIKE TYPE */}
+    <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5 py-4 transition-all duration-300 hover:border-blue-500/20">
+
+      <p className="text-xs text-gray-500 dark:text-white/40 mb-2">
+        Bike Type
+      </p>
+
+      <select
+        value={bikeFilter}
+        onChange={(e) => setBikeFilter(e.target.value)}
+        className="bg-transparent outline-none w-full text-sm font-semibold"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/[0.03] via-purple-500/[0.03] to-cyan-500/[0.03]" />
+        <option value="">All Bike Types</option>
+        {bikeTypes.map((type, index) => (
+          <option key={index} value={type}>
+            {type}
+          </option>
+        ))}
+      </select>
 
-        <div className="absolute -top-20 -left-20 h-60 w-60 bg-blue-500/10 blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-60 w-60 bg-purple-500/10 blur-3xl" />
+    </div>
 
-        <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5">
+    {/* QUALITY */}
+    <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5 py-4 transition-all duration-300 hover:border-yellow-500/20">
 
-          <div className="flex items-center gap-3">
+      <p className="text-xs text-gray-500 dark:text-white/40 mb-2">
+        Product Quality
+      </p>
 
-            <div className="h-14 w-14 rounded-3xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-blue-500 flex items-center justify-center text-2xl">
-              <FaFilter />
-            </div>
+      <select
+        value={qualityFilter}
+        onChange={(e) => setQualityFilter(e.target.value)}
+        className="bg-transparent outline-none w-full text-sm font-semibold"
+      >
+        <option value="">All Qualities</option>
+        {qualities.map((quality, index) => (
+          <option key={index} value={quality}>
+            {quality}
+          </option>
+        ))}
+      </select>
 
-            <div>
-              <h3 className="text-2xl font-black tracking-tight">
-                Search & Filters
-              </h3>
+    </div>
 
-              <p className="text-xs text-gray-500 dark:text-white/40">
-                Quickly filter inventory data
-              </p>
-            </div>
+    {/* MODEL */}
+    <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5 py-4 transition-all duration-300 hover:border-green-500/20">
 
-          </div>
+      <p className="text-xs text-gray-500 dark:text-white/40 mb-2">
+        Product Model
+      </p>
 
-          <button
-            onClick={() => {
-              setSearch("");
-              setBikeFilter("");
-              setQualityFilter("");
-              setModelFilter("");
-            }}
-            className="px-5 py-3 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-500 font-bold text-sm"
-          >
-            Clear Filters
-          </button>
+      <select
+        value={modelFilter}
+        onChange={(e) => setModelFilter(e.target.value)}
+        className="bg-transparent outline-none w-full text-sm font-semibold"
+      >
+        <option value="">All Models</option>
+        {models.map((model, index) => (
+          <option key={index} value={model}>
+            {model}
+          </option>
+        ))}
+      </select>
 
-        </div>
+    </div>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+  </div>
 
-          <div className="group flex items-center gap-3 px-5 py-4 rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03]">
-
-            <div className="h-11 w-11 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
-              <FaSearch />
-            </div>
-
-            <input
-              type="text"
-              placeholder="Type product name..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent outline-none w-full"
-            />
-
-          </div>
-
-          <select
-            value={bikeFilter}
-            onChange={(e) => setBikeFilter(e.target.value)}
-            className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5"
-          >
-            <option value="">All Bike Types</option>
-            {bikeTypes.map((type, index) => (
-              <option key={index} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={qualityFilter}
-            onChange={(e) => setQualityFilter(e.target.value)}
-            className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5"
-          >
-            <option value="">All Qualities</option>
-            {qualities.map((quality, index) => (
-              <option key={index} value={quality}>
-                {quality}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={modelFilter}
-            onChange={(e) => setModelFilter(e.target.value)}
-            className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5"
-          >
-            <option value="">All Models</option>
-            {models.map((model, index) => (
-              <option key={index} value={model}>
-                {model}
-              </option>
-            ))}
-          </select>
-
-        </div>
-      </motion.div>
+</motion.div>
 
       {/* PRODUCTS SECTION */}
       <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-5">
