@@ -446,18 +446,20 @@ export default function Dashboard() {
 
   {/* HEADER */}
   <div className="relative flex items-center justify-between mb-5">
-    
+
     <div className="flex items-center gap-3">
 
-      <div className="
-        h-14 w-14 rounded-3xl
-        bg-gradient-to-br from-red-500/20 to-orange-500/20
-        text-red-500
-        flex items-center justify-center
-        text-2xl
-        shadow-lg shadow-red-500/10
-        border border-red-500/10
-      ">
+      <div
+        className="
+          h-14 w-14 rounded-3xl
+          bg-gradient-to-br from-red-500/20 to-orange-500/20
+          text-red-500
+          flex items-center justify-center
+          text-2xl
+          shadow-lg shadow-red-500/10
+          border border-red-500/10
+        "
+      >
         <FaExclamationTriangle />
       </div>
 
@@ -473,13 +475,15 @@ export default function Dashboard() {
 
     </div>
 
-    <span className="
-      px-4 py-2 rounded-2xl
-      bg-red-500/10
-      text-red-500
-      text-sm font-bold
-      border border-red-500/10
-    ">
+    <span
+      className="
+        px-4 py-2 rounded-2xl
+        bg-red-500/10
+        text-red-500
+        text-sm font-bold
+        border border-red-500/10
+      "
+    >
       {lowStockItems.length} Items
     </span>
 
@@ -487,13 +491,15 @@ export default function Dashboard() {
 
   {/* CONTENT */}
   {lowStockItems.length === 0 ? (
-    
-    <div className="
-      relative rounded-3xl
-      border border-dashed border-black/10 dark:border-white/10
-      p-10 text-center
-      bg-gray-50 dark:bg-white/[0.02]
-    ">
+
+    <div
+      className="
+        relative rounded-3xl
+        border border-dashed border-black/10 dark:border-white/10
+        p-10 text-center
+        bg-gray-50 dark:bg-white/[0.02]
+      "
+    >
       <FaBox className="mx-auto text-4xl text-gray-400 mb-4" />
 
       <h3 className="font-bold text-lg">
@@ -533,19 +539,36 @@ export default function Dashboard() {
 
               <div className="flex flex-wrap gap-2 mt-3">
 
-                <span className="
-                  px-3 py-1 rounded-full
-                  text-xs font-bold
-                  bg-blue-500/10 text-blue-500
-                ">
+                {/* Bike Type */}
+                <span
+                  className="
+                    px-3 py-1 rounded-full
+                    text-xs font-bold
+                    bg-blue-500/10 text-blue-500
+                  "
+                >
                   {item.bike_type}
                 </span>
 
-                <span className="
-                  px-3 py-1 rounded-full
-                  text-xs font-bold
-                  bg-green-500/10 text-green-500
-                ">
+                {/* Quality */}
+                <span
+                  className="
+                    px-3 py-1 rounded-full
+                    text-xs font-bold
+                    bg-yellow-500/10 text-yellow-500
+                  "
+                >
+                  {item.quality || "Standard"}
+                </span>
+
+                {/* Model */}
+                <span
+                  className="
+                    px-3 py-1 rounded-full
+                    text-xs font-bold
+                    bg-green-500/10 text-green-500
+                  "
+                >
                   {item.model || "Standard"}
                 </span>
 
@@ -575,10 +598,6 @@ export default function Dashboard() {
 
   )}
 </motion.div>
-            ))}
-          </div>
-        )}
-      </div>
 
       {/* RECENT BILLS */}
       <div
