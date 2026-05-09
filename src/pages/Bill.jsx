@@ -441,134 +441,162 @@ export default function Bill() {
           </div>
 
           {/* BIKE TYPE */}
-          <div className="group relative rounded-3xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] backdrop-blur-xl px-5 py-4 transition-all duration-300 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/5 focus-within:border-blue-500/50 focus-within:shadow-xl focus-within:shadow-blue-500/10">
-            <p className="text-xs font-medium tracking-wide text-gray-500 dark:text-white/40 mb-2">
-              Bike Type
-            </p>
+<div className="group relative overflow-hidden rounded-[28px] border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/[0.04] backdrop-blur-2xl px-5 py-4 transition-all duration-300 hover:border-blue-500/30 hover:bg-white dark:hover:bg-white/[0.06] hover:shadow-2xl hover:shadow-blue-500/10 focus-within:border-blue-500/50 focus-within:shadow-[0_0_0_4px_rgba(59,130,246,0.08)]">
+  {/* glow */}
+  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] via-transparent to-cyan-500/[0.03] opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none" />
 
-            <div className="relative">
-              <select
-                value={bikeFilter}
-                onChange={(e) => setBikeFilter(e.target.value)}
-                className="appearance-none bg-transparent outline-none w-full text-sm font-semibold text-black dark:text-white pr-10 cursor-pointer"
-              >
-                <option value="">All Bike Types</option>
+  <p className="relative text-[11px] uppercase tracking-[0.2em] text-gray-500 dark:text-white/40 mb-3 font-bold">
+    Bike Type
+  </p>
 
-                {bikeTypes.map((type, index) => (
-                  <option
-                    key={index}
-                    value={type}
-                    className="bg-white dark:bg-[#0f0f0f] text-black dark:text-white"
-                  >
-                    {type}
-                  </option>
-                ))}
-              </select>
+  <div className="relative">
+    <select
+      value={bikeFilter}
+      onChange={(e) => setBikeFilter(e.target.value)}
+      className="relative appearance-none bg-transparent outline-none w-full text-sm font-semibold text-black dark:text-white pr-12 cursor-pointer tracking-wide"
+    >
+      <option
+        value=""
+        className="bg-white dark:bg-[#0f0f0f] text-black dark:text-white"
+      >
+        All Bike Types
+      </option>
 
-              <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-all duration-300">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+      {bikeTypes.map((type, index) => (
+        <option
+          key={index}
+          value={type}
+          className="bg-white dark:bg-[#0f0f0f] text-black dark:text-white"
+        >
+          {type}
+        </option>
+      ))}
+    </select>
+
+    {/* custom arrow */}
+    <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2">
+      <div className="h-9 w-9 rounded-xl bg-blue-500/10 border border-blue-500/10 flex items-center justify-center text-blue-500 transition-all duration-300 group-hover:scale-110 group-focus-within:scale-110 group-focus-within:bg-blue-500/20">
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
 
           {/* QUALITY */}
-          <div className="group relative rounded-3xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] backdrop-blur-xl px-5 py-4 transition-all duration-300 hover:border-yellow-500/30 hover:shadow-lg hover:shadow-yellow-500/5 focus-within:border-yellow-500/50 focus-within:shadow-xl focus-within:shadow-yellow-500/10">
-            <p className="text-xs font-medium tracking-wide text-gray-500 dark:text-white/40 mb-2">
-              Product Quality
-            </p>
+<div className="group relative overflow-hidden rounded-[28px] border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/[0.04] backdrop-blur-2xl px-5 py-4 transition-all duration-300 hover:border-yellow-500/30 hover:bg-white dark:hover:bg-white/[0.06] hover:shadow-2xl hover:shadow-yellow-500/10 focus-within:border-yellow-500/50 focus-within:shadow-[0_0_0_4px_rgba(234,179,8,0.08)]">
+  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/[0.03] via-transparent to-orange-500/[0.03] opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none" />
 
-            <div className="relative">
-              <select
-                value={qualityFilter}
-                onChange={(e) => setQualityFilter(e.target.value)}
-                className="appearance-none bg-transparent outline-none w-full text-sm font-semibold text-black dark:text-white pr-10 cursor-pointer"
-              >
-                <option value="">All Qualities</option>
+  <p className="relative text-[11px] uppercase tracking-[0.2em] text-gray-500 dark:text-white/40 mb-3 font-bold">
+    Product Quality
+  </p>
 
-                {qualities.map((quality, index) => (
-                  <option
-                    key={index}
-                    value={quality}
-                    className="bg-white dark:bg-[#0f0f0f] text-black dark:text-white"
-                  >
-                    {quality}
-                  </option>
-                ))}
-              </select>
+  <div className="relative">
+    <select
+      value={qualityFilter}
+      onChange={(e) => setQualityFilter(e.target.value)}
+      className="relative appearance-none bg-transparent outline-none w-full text-sm font-semibold text-black dark:text-white pr-12 cursor-pointer tracking-wide"
+    >
+      <option
+        value=""
+        className="bg-white dark:bg-[#0f0f0f] text-black dark:text-white"
+      >
+        All Qualities
+      </option>
 
-              <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-yellow-500 transition-all duration-300">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+      {qualities.map((quality, index) => (
+        <option
+          key={index}
+          value={quality}
+          className="bg-white dark:bg-[#0f0f0f] text-black dark:text-white"
+        >
+          {quality}
+        </option>
+      ))}
+    </select>
+
+    <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2">
+      <div className="h-9 w-9 rounded-xl bg-yellow-500/10 border border-yellow-500/10 flex items-center justify-center text-yellow-500 transition-all duration-300 group-hover:scale-110 group-focus-within:scale-110 group-focus-within:bg-yellow-500/20">
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
 
           {/* MODEL */}
-          <div className="group relative rounded-3xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] backdrop-blur-xl px-5 py-4 transition-all duration-300 hover:border-green-500/30 hover:shadow-lg hover:shadow-green-500/5 focus-within:border-green-500/50 focus-within:shadow-xl focus-within:shadow-green-500/10">
-            <p className="text-xs font-medium tracking-wide text-gray-500 dark:text-white/40 mb-2">
-              Product Model
-            </p>
+<div className="group relative overflow-hidden rounded-[28px] border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/[0.04] backdrop-blur-2xl px-5 py-4 transition-all duration-300 hover:border-green-500/30 hover:bg-white dark:hover:bg-white/[0.06] hover:shadow-2xl hover:shadow-green-500/10 focus-within:border-green-500/50 focus-within:shadow-[0_0_0_4px_rgba(34,197,94,0.08)]">
+  <div className="absolute inset-0 bg-gradient-to-br from-green-500/[0.03] via-transparent to-emerald-500/[0.03] opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none" />
 
-            <div className="relative">
-              <select
-                value={modelFilter}
-                onChange={(e) => setModelFilter(e.target.value)}
-                className="appearance-none bg-transparent outline-none w-full text-sm font-semibold text-black dark:text-white pr-10 cursor-pointer"
-              >
-                <option value="">All Models</option>
+  <p className="relative text-[11px] uppercase tracking-[0.2em] text-gray-500 dark:text-white/40 mb-3 font-bold">
+    Product Model
+  </p>
 
-                {models.map((model, index) => (
-                  <option
-                    key={index}
-                    value={model}
-                    className="bg-white dark:bg-[#0f0f0f] text-black dark:text-white"
-                  >
-                    {model}
-                  </option>
-                ))}
-              </select>
+  <div className="relative">
+    <select
+      value={modelFilter}
+      onChange={(e) => setModelFilter(e.target.value)}
+      className="relative appearance-none bg-transparent outline-none w-full text-sm font-semibold text-black dark:text-white pr-12 cursor-pointer tracking-wide"
+    >
+      <option
+        value=""
+        className="bg-white dark:bg-[#0f0f0f] text-black dark:text-white"
+      >
+        All Models
+      </option>
 
-              <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-green-500 transition-all duration-300">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
+      {models.map((model, index) => (
+        <option
+          key={index}
+          value={model}
+          className="bg-white dark:bg-[#0f0f0f] text-black dark:text-white"
+        >
+          {model}
+        </option>
+      ))}
+    </select>
+
+    <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2">
+      <div className="h-9 w-9 rounded-xl bg-green-500/10 border border-green-500/10 flex items-center justify-center text-green-500 transition-all duration-300 group-hover:scale-110 group-focus-within:scale-110 group-focus-within:bg-green-500/20">
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
       </motion.div>
 
       {/* PRODUCTS SECTION */}
