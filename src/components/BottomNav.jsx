@@ -6,10 +6,10 @@ export default function BottomNav() {
   const location = useLocation();
 
   const navItems = [
-    { name: "Dashboard", path: "/", icon: <FaChartPie /> },
-    { name: "Inventory", path: "/inventory", icon: <FaClipboardList /> },
-    { name: "Bill", path: "/bill", icon: <FaFileInvoice /> },
-    { name: "Reports", path: "/reports", icon: <FaChartBar /> },
+    { path: "/", icon: <FaChartPie /> },
+    { path: "/inventory", icon: <FaClipboardList /> },
+    { path: "/bill", icon: <FaFileInvoice /> },
+    { path: "/reports", icon: <FaChartBar /> },
   ];
 
   return (
@@ -34,7 +34,7 @@ export default function BottomNav() {
           const isActive = location.pathname === item.path;
 
           return (
-            <Link key={item.name} to={item.path} className="flex-1">
+            <Link key={item.path} to={item.path} className="flex-1">
               <motion.div
                 whileTap={{ scale: 0.9 }}
                 className="relative flex items-center justify-center"
