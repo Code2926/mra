@@ -19,6 +19,12 @@ export default function Inventory() {
   const [inputs, setInputs] = useState({});
   const [search, setSearch] = useState("");
 
+   /* SEARCH + FILTERS */
+  const [search, setSearch] = useState("");
+  const [bikeFilter, setBikeFilter] = useState("");
+  const [qualityFilter, setQualityFilter] = useState("");
+  const [modelFilter, setModelFilter] = useState("");
+
   /* FETCH PRODUCTS */
   const fetchItems = async () => {
     setLoading(true);
