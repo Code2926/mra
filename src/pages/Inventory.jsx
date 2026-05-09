@@ -147,154 +147,133 @@ export default function Inventory() {
         </div>
       </div>
 
-      {/* SUMMARY GRID */}
+      {/* SUMMARY */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
 
-        {/* CARD 1 */}
-        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5 flex justify-between items-center">
-          <div>
-            <div className="text-sm text-gray-500">Total Products</div>
-            <div className="text-4xl font-black mt-3">{items.length}</div>
-          </div>
-          <FaBox className="text-blue-500 text-3xl" />
-        </motion.div>
-
-        {/* CARD 2 */}
-        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5 flex justify-between items-center">
-          <div>
-            <div className="text-sm text-gray-500">Total Stock</div>
-            <div className="text-4xl font-black mt-3">{totalStock}</div>
-          </div>
-          <FaWarehouse className="text-green-500 text-3xl" />
-        </motion.div>
-
-        {/* CARD 3 */}
-        <motion.div whileHover={{ y: -5 }} className="rounded-3xl border bg-white dark:bg-[#0a0a0a] p-5 flex justify-between items-center">
-          <div>
-            <div className="text-sm text-gray-500">Low Stock</div>
-            <div className="text-4xl font-black mt-3 text-red-500">
-              {lowStockItems.length}
-            </div>
-          </div>
-          <FaExclamationTriangle className="text-red-500 text-3xl" />
-        </motion.div>
-
-        {/* FIXED: SEARCH + FILTER BAR */}
+        {/* PRODUCTS */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="col-span-full relative overflow-hidden rounded-[32px] border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#0a0a0a]/90 backdrop-blur-xl p-5 shadow-2xl shadow-black/5"
+          whileHover={{ y: -5 }}
+          className="
+            rounded-3xl
+            border border-black/10 dark:border-white/10
+            bg-white dark:bg-[#0a0a0a]
+            p-5
+            relative overflow-hidden
+          "
         >
-          {/* GLOW */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/[0.03] via-purple-500/[0.03] to-cyan-500/[0.03] pointer-events-none" />
 
-          {/* TOP */}
-          <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5">
-            <div className="flex items-center gap-3">
-              <div className="h-14 w-14 rounded-3xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-blue-500 flex items-center justify-center text-2xl shadow-lg shadow-blue-500/10 border border-blue-500/10">
-                <FaFilter />
-              </div>
+          <div className="absolute -top-10 -right-10 h-40 w-40 bg-blue-500/10 blur-3xl" />
 
-              <div>
-                <h3 className="text-2xl font-black tracking-tight">
-                  Search & Filters
-                </h3>
-              </div>
+          <div className="relative z-10 flex justify-between">
+
+            <div>
+              <p className="text-sm text-gray-500 dark:text-white/50">
+                Total Products
+              </p>
+
+              <h2 className="text-4xl font-black mt-3 break-words">
+                {formatNumber(items.length)}
+              </h2>
             </div>
 
-            <button
-              onClick={() => {
-                setSearch("");
-                setBikeFilter("");
-                setQualityFilter("");
-                setModelFilter("");
-              }}
-              className="px-5 py-3 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-500 font-bold text-sm transition-all duration-300 border border-red-500/10 hover:scale-[1.02]"
+            <div
+              className="
+                h-14 w-14 rounded-2xl
+                bg-blue-500/10
+                text-blue-500
+                flex items-center justify-center
+                text-xl
+              "
             >
-              Clear Filters
-            </button>
-          </div>
-
-          {/* FILTER GRID */}
-          <div className="relative grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            
-            {/* SEARCH */}
-            <div className="group flex items-center gap-3 px-5 py-4 rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] focus-within:border-blue-500/40 focus-within:shadow-lg focus-within:shadow-blue-500/10 transition-all duration-300">
-              <div className="h-11 w-11 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-lg group-focus-within:scale-110 transition-all duration-300">
-                <FaSearch />
-              </div>
-
-              <div className="flex-1">
-                <p className="text-xs text-gray-500 dark:text-white/40 mb-1">
-                  Search Product
-                </p>
-
-                <input
-                  type="text"
-                  placeholder="Type product name..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="bg-transparent outline-none w-full text-sm font-medium placeholder:text-gray-400"
-                />
-              </div>
-            </div>
-
-            {/* BIKE TYPE */}
-            <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5 py-4">
-              <p className="text-xs text-gray-500 dark:text-white/40 mb-2">
-                Bike Type
-              </p>
-
-              <select
-                value={bikeFilter}
-                onChange={(e) => setBikeFilter(e.target.value)}
-                className="bg-transparent outline-none w-full text-sm font-semibold"
-              >
-                <option value="">All Bike Types</option>
-                {bikeTypes.map((type, index) => (
-                  <option key={index} value={type}>{type}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* QUALITY */}
-            <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5 py-4">
-              <p className="text-xs text-gray-500 dark:text-white/40 mb-2">
-                Product Quality
-              </p>
-
-              <select
-                value={qualityFilter}
-                onChange={(e) => setQualityFilter(e.target.value)}
-                className="bg-transparent outline-none w-full text-sm font-semibold"
-              >
-                <option value="">All Qualities</option>
-                {qualities.map((quality, index) => (
-                  <option key={index} value={quality}>{quality}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* MODEL */}
-            <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5 py-4">
-              <p className="text-xs text-gray-500 dark:text-white/40 mb-2">
-                Product Model
-              </p>
-
-              <select
-                value={modelFilter}
-                onChange={(e) => setModelFilter(e.target.value)}
-                className="bg-transparent outline-none w-full text-sm font-semibold"
-              >
-                <option value="">All Models</option>
-                {models.map((model, index) => (
-                  <option key={index} value={model}>{model}</option>
-                ))}
-              </select>
+              <FaBox />
             </div>
 
           </div>
+
+        </motion.div>
+
+        {/* STOCK */}
+        <motion.div
+          whileHover={{ y: -5 }}
+          className="
+            rounded-3xl
+            border border-black/10 dark:border-white/10
+            bg-white dark:bg-[#0a0a0a]
+            p-5
+            relative overflow-hidden
+          "
+        >
+
+          <div className="absolute -top-10 -right-10 h-40 w-40 bg-green-500/10 blur-3xl" />
+
+          <div className="relative z-10 flex justify-between">
+
+            <div>
+              <p className="text-sm text-gray-500 dark:text-white/50">
+                Total Stock
+              </p>
+
+              <h2 className="text-4xl font-black mt-3 break-words">
+                {formatNumber(totalStock)}
+              </h2>
+            </div>
+
+            <div
+              className="
+                h-14 w-14 rounded-2xl
+                bg-green-500/10
+                text-green-500
+                flex items-center justify-center
+                text-xl
+              "
+            >
+              <FaWarehouse />
+            </div>
+
+          </div>
+
+        </motion.div>
+
+        {/* LOW STOCK */}
+        <motion.div
+          whileHover={{ y: -5 }}
+          className="
+            rounded-3xl
+            border border-red-500/20
+            bg-white dark:bg-[#0a0a0a]
+            p-5
+            relative overflow-hidden
+          "
+        >
+
+          <div className="absolute -top-10 -right-10 h-40 w-40 bg-red-500/10 blur-3xl" />
+
+          <div className="relative z-10 flex justify-between">
+
+            <div>
+              <p className="text-sm text-gray-500 dark:text-white/50">
+                Low Stock
+              </p>
+
+              <h2 className="text-4xl font-black mt-3 break-words text-red-500">
+                {formatNumber(lowStockItems.length)}
+              </h2>
+            </div>
+
+            <div
+              className="
+                h-14 w-14 rounded-2xl
+                bg-red-500/10
+                text-red-500
+                flex items-center justify-center
+                text-xl
+              "
+            >
+              <FaExclamationTriangle />
+            </div>
+
+          </div>
+
         </motion.div>
 
       </div>
@@ -302,9 +281,19 @@ export default function Inventory() {
       {/* ITEMS */}
       {loading ? (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-[320px] rounded-3xl bg-black/5 dark:bg-white/5 animate-pulse" />
+            <div
+              key={i}
+              className="
+                h-[320px]
+                rounded-3xl
+                bg-black/5 dark:bg-white/5
+                animate-pulse
+              "
+            />
           ))}
+
         </div>
       ) : (
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -316,54 +305,179 @@ export default function Inventory() {
               <motion.div
                 key={item.id}
                 whileHover={{ y: -5 }}
-                className={`rounded-3xl p-5 border ${
-                  lowStock
-                    ? "border-red-500/20 bg-red-500/5"
-                    : "border-black/10 dark:border-white/10"
-                }`}
-              >
-                <h2 className="font-black text-xl">{item.product_name}</h2>
+                className={`
+                  relative overflow-hidden
+                  rounded-3xl
+                  border
+                  p-5
+                  transition-all duration-300
 
-                <div className="flex gap-2 mt-2 text-xs">
-                  <span className="text-blue-500">{item.bike_type}</span>
-                  <span className="text-yellow-500">{item.quality}</span>
-                  <span className="text-green-500">{item.model}</span>
-                </div>
-
-                <div className="text-2xl font-black mt-3">{item.stock}</div>
-
-                <input
-                  type="number"
-                  value={inputs[item.id] || ""}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, [item.id]: e.target.value })
+                  ${
+                    lowStock
+                      ? "border-red-500/20 bg-red-500/[0.04]"
+                      : "border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a]"
                   }
-                  className="w-full mt-4 p-3 rounded-xl bg-gray-100 dark:bg-black/30"
-                  placeholder="Qty"
+                `}
+              >
+
+                {/* GLOW */}
+                <div
+                  className={`
+                    absolute -top-10 -right-10
+                    h-40 w-40 blur-3xl opacity-20
+
+                    ${
+                      lowStock
+                        ? "bg-red-500"
+                        : "bg-blue-500"
+                    }
+                  `}
                 />
 
-                <div className="flex gap-3 mt-4">
-                  <button
-                    onClick={() => addStock(item)}
-                    className="flex-1 bg-green-500 py-2 rounded-xl flex items-center justify-center gap-2"
-                  >
-                    <FaArrowUp /> Add
-                  </button>
+                <div className="relative z-10">
 
-                  <button
-                    onClick={() => deductStock(item)}
-                    className="flex-1 bg-red-500 py-2 rounded-xl flex items-center justify-center gap-2"
-                  >
-                    <FaArrowDown /> Deduct
-                  </button>
+                  {/* TOP */}
+                  <div className="flex justify-between items-start gap-3">
+
+                    <div className="min-w-0">
+
+                      <h2
+                        className="
+                          text-xl font-black
+                          leading-tight
+                          break-words
+                        "
+                      >
+                        {item.product_name}
+                      </h2>
+
+                      <div className="flex flex-wrap gap-2 mt-3">
+
+                        <span
+                          className="
+                            px-3 py-1 rounded-full
+                            text-xs font-bold
+                            bg-blue-500/10 text-blue-500
+                          "
+                        >
+                          {item.bike_type}
+                        </span>
+
+                        <span
+                          className="
+                            px-3 py-1 rounded-full
+                            text-xs font-bold
+                            bg-yellow-500/10 text-yellow-500
+                          "
+                        >
+                          {item.quality}
+                        </span>
+
+                        <span
+                          className="
+                            px-3 py-1 rounded-full
+                            text-xs font-bold
+                            bg-green-500/10 text-green-500
+                          "
+                        >
+                          {item.model || "NEW"}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                    <div
+                      className={`
+                        px-4 py-2 rounded-2xl
+                        font-black text-xl
+
+                        ${
+                          lowStock
+                            ? "bg-red-500/10 text-red-500"
+                            : "bg-green-500/10 text-green-500"
+                        }
+                      `}
+                    >
+                      {formatNumber(item.stock)}
+                    </div>
+
+                  </div>
+
+                  {/* INPUT */}
+                  <div className="mt-6">
+
+                    <input
+                      type="number"
+                      placeholder="Enter quantity"
+                      value={inputs[item.id] || ""}
+                      onChange={(e) =>
+                        setInputs({
+                          ...inputs,
+                          [item.id]: e.target.value,
+                        })
+                      }
+                      className="
+                        w-full
+                        rounded-2xl
+                        px-4 py-3
+                        outline-none
+                        border border-black/10 dark:border-white/10
+                        bg-gray-100 dark:bg-black/30
+                        text-black dark:text-white
+                        placeholder:text-gray-400
+                      "
+                    />
+
+                  </div>
+
+                  {/* BUTTONS */}
+                  <div className="flex gap-3 mt-5">
+
+                    <button
+                      onClick={() => addStock(item)}
+                      className="
+                        flex-1
+                        py-3 rounded-2xl
+                        bg-green-500
+                        hover:bg-green-600
+                        text-black
+                        font-black
+                        transition-all duration-300
+                        flex items-center justify-center gap-2
+                      "
+                    >
+                      <FaArrowUp />
+                      Add
+                    </button>
+
+                    <button
+                      onClick={() => deductStock(item)}
+                      className="
+                        flex-1
+                        py-3 rounded-2xl
+                        bg-red-500
+                        hover:bg-red-600
+                        text-black
+                        font-black
+                        transition-all duration-300
+                        flex items-center justify-center gap-2
+                      "
+                    >
+                      <FaArrowDown />
+                      Deduct
+                    </button>
+
+                  </div>
+
                 </div>
+
               </motion.div>
             );
           })}
 
         </div>
       )}
-
     </div>
   );
 }
