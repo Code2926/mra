@@ -13,6 +13,9 @@ import {
   FaExclamationTriangle,
   FaFileInvoice,
   FaFilter,
+  FaTimes,
+  FaCheckCircle,
+  FaLayerGroup,
 } from "react-icons/fa";
 
 export default function Bill() {
@@ -60,7 +63,7 @@ export default function Bill() {
     fetchSettings();
   }, []);
 
-  /* FORMAT NUMBERS */
+  /* FORMAT */
   const formatNumber = (num) => {
     const value = Number(num) || 0;
 
@@ -75,17 +78,25 @@ export default function Bill() {
     return value;
   };
 
-  /* UNIQUE FILTER OPTIONS */
-  const bikeTypes = [...new Set(products.map((p) => p.bike_type).filter(Boolean))];
-  const qualities = [...new Set(products.map((p) => p.quality).filter(Boolean))];
-  const models = [...new Set(products.map((p) => p.model).filter(Boolean))];
+  /* FILTER OPTIONS */
+  const bikeTypes = [
+    ...new Set(products.map((p) => p.bike_type).filter(Boolean)),
+  ];
+
+  const qualities = [
+    ...new Set(products.map((p) => p.quality).filter(Boolean)),
+  ];
+
+  const models = [
+    ...new Set(products.map((p) => p.model).filter(Boolean)),
+  ];
 
   /* FILTER PRODUCTS */
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
-      const matchesSearch = `${p.product_name} ${p.bike_type} ${p.quality} ${
-        p.model || ""
-      }`
+      const matchesSearch = `${p.product_name} ${p.bike_type} ${
+        p.quality
+      } ${p.model || ""}`
         .toLowerCase()
         .includes(search.toLowerCase());
 
@@ -271,10 +282,8 @@ export default function Bill() {
 
       toast.success("Bill saved successfully");
 
-      /* OPEN INVOICE */
       window.open(`/invoice/${billData.id}`, "_blank");
 
-      /* RESET */
       setCart([]);
       setClientName("");
 
@@ -290,46 +299,172 @@ export default function Bill() {
   return (
     <div className="space-y-6 text-black dark:text-white">
       {/* HEADER */}
-      <div className="flex flex-col gap-4">
-        <div>
-          <h1 className="text-4xl font-black">Billing</h1>
+      <div className="relative overflow-hidden rounded-[36px] border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-7 shadow-2xl shadow-black/5">
+        {/* BACKGROUND GLOW */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] via-purple-500/[0.04] to-cyan-500/[0.04]" />
 
-          <p className="text-gray-500 dark:text-white/50 text-sm mt-1">
-            Create invoices and manage customer billing
-          </p>
+        <div className="relative flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
+          {/* LEFT */}
+          <div>
+            <div className="flex items-center gap-4">
+              <div className="h-16 w-16 rounded-3xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 text-blue-500 flex items-center justify-center text-3xl shadow-lg shadow-blue-500/10">
+                <FaFileInvoice />
+              </div>
+
+              <div>
+                <h1 className="text-4xl md:text-5xl font-black tracking-tight">
+                  Billing
+                </h1>
+
+                <p className="text-gray-500 dark:text-white/50 text-sm mt-2">
+                  Create invoices and manage customer billing
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT STATS */}
+          <div className="flex flex-wrap gap-4">
+            <div className="rounded-3xl bg-blue-500/10 border border-blue-500/10 px-5 py-4 min-w-[150px]">
+              <p className="text-xs text-blue-500 font-bold uppercase">
+                Products
+              </p>
+
+              <h2 className="text-3xl font-black mt-1">
+                {formatNumber(products.length)}
+              </h2>
+            </div>
+
+            <div className="rounded-3xl bg-green-500/10 border border-green-500/10 px-5 py-4 min-w-[150px]">
+              <p className="text-xs text-green-500 font-bold uppercase">
+                Cart Items
+              </p>
+
+              <h2 className="text-3xl font-black mt-1">
+                {formatNumber(cart.length)}
+              </h2>
+            </div>
+
+            <div className="rounded-3xl bg-yellow-500/10 border border-yellow-500/10 px-5 py-4 min-w-[170px]">
+              <p className="text-xs text-yellow-500 font-bold uppercase">
+                Total Amount
+              </p>
+
+              <h2 className="text-3xl font-black mt-1">
+                Rs {formatNumber(total)}
+              </h2>
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* ADVANCED SEARCH BAR */}
-        <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="h-10 w-10 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
+      {/* PREMIUM SEARCH + FILTERS */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative overflow-hidden rounded-[36px] border border-black/10 dark:border-white/10 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-xl p-6 shadow-2xl shadow-black/5"
+      >
+        {/* GLOW */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/[0.03] via-purple-500/[0.03] to-cyan-500/[0.03]" />
+
+        {/* TOP */}
+        <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-6">
+          <div className="flex items-center gap-4">
+            <div className="h-16 w-16 rounded-3xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-blue-500 flex items-center justify-center text-2xl shadow-lg shadow-blue-500/10 border border-blue-500/10">
               <FaFilter />
             </div>
 
             <div>
-              <h3 className="font-black text-lg">Search & Filters</h3>
+              <h3 className="text-3xl font-black tracking-tight">
+                Search & Filters
+              </h3>
+
+              <p className="text-sm text-gray-500 dark:text-white/50 mt-1">
+                Quickly find exact products with smart filters
+              </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-            {/* SEARCH */}
-            <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20">
-              <FaSearch className="text-gray-400 flex-shrink-0" />
+          {/* ACTIVE FILTERS */}
+          <div className="flex flex-wrap gap-2">
+            {search && (
+              <div className="px-4 py-2 rounded-2xl bg-blue-500/10 text-blue-500 text-sm font-bold flex items-center gap-2">
+                <FaSearch />
+                {search}
+              </div>
+            )}
+
+            {bikeFilter && (
+              <div className="px-4 py-2 rounded-2xl bg-purple-500/10 text-purple-500 text-sm font-bold">
+                {bikeFilter}
+              </div>
+            )}
+
+            {qualityFilter && (
+              <div className="px-4 py-2 rounded-2xl bg-yellow-500/10 text-yellow-500 text-sm font-bold">
+                {qualityFilter}
+              </div>
+            )}
+
+            {modelFilter && (
+              <div className="px-4 py-2 rounded-2xl bg-green-500/10 text-green-500 text-sm font-bold">
+                {modelFilter}
+              </div>
+            )}
+
+            {(search ||
+              bikeFilter ||
+              qualityFilter ||
+              modelFilter) && (
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setBikeFilter("");
+                  setQualityFilter("");
+                  setModelFilter("");
+                }}
+                className="px-4 py-2 rounded-2xl bg-red-500/10 hover:bg-red-500/20 text-red-500 text-sm font-bold transition-all duration-300 flex items-center gap-2"
+              >
+                <FaTimes />
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* FILTER GRID */}
+        <div className="relative grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          {/* SEARCH */}
+          <div className="group flex items-center gap-4 px-5 py-4 rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] focus-within:border-blue-500/40 focus-within:shadow-xl focus-within:shadow-blue-500/10 transition-all duration-300">
+            <div className="h-12 w-12 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-lg group-focus-within:scale-110 transition-all duration-300">
+              <FaSearch />
+            </div>
+
+            <div className="flex-1">
+              <p className="text-xs text-gray-500 dark:text-white/40 mb-1">
+                Search Product
+              </p>
 
               <input
                 type="text"
-                placeholder="Search product..."
+                placeholder="Type product name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="bg-transparent outline-none w-full text-sm placeholder:text-gray-400"
+                className="bg-transparent outline-none w-full text-sm font-semibold placeholder:text-gray-400"
               />
             </div>
+          </div>
 
-            {/* BIKE TYPE */}
+          {/* BIKE TYPE */}
+          <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5 py-4 transition-all duration-300 hover:border-blue-500/20">
+            <p className="text-xs text-gray-500 dark:text-white/40 mb-2">
+              Bike Type
+            </p>
+
             <select
               value={bikeFilter}
               onChange={(e) => setBikeFilter(e.target.value)}
-              className="px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 outline-none text-sm"
+              className="bg-transparent outline-none w-full text-sm font-semibold"
             >
               <option value="">All Bike Types</option>
 
@@ -339,12 +474,18 @@ export default function Bill() {
                 </option>
               ))}
             </select>
+          </div>
 
-            {/* QUALITY */}
+          {/* QUALITY */}
+          <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5 py-4 transition-all duration-300 hover:border-yellow-500/20">
+            <p className="text-xs text-gray-500 dark:text-white/40 mb-2">
+              Product Quality
+            </p>
+
             <select
               value={qualityFilter}
               onChange={(e) => setQualityFilter(e.target.value)}
-              className="px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 outline-none text-sm"
+              className="bg-transparent outline-none w-full text-sm font-semibold"
             >
               <option value="">All Qualities</option>
 
@@ -354,12 +495,18 @@ export default function Bill() {
                 </option>
               ))}
             </select>
+          </div>
 
-            {/* MODEL */}
+          {/* MODEL */}
+          <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100/80 dark:bg-white/[0.03] px-5 py-4 transition-all duration-300 hover:border-green-500/20">
+            <p className="text-xs text-gray-500 dark:text-white/40 mb-2">
+              Product Model
+            </p>
+
             <select
               value={modelFilter}
               onChange={(e) => setModelFilter(e.target.value)}
-              className="px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 outline-none text-sm"
+              className="bg-transparent outline-none w-full text-sm font-semibold"
             >
               <option value="">All Models</option>
 
@@ -371,213 +518,197 @@ export default function Bill() {
             </select>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* SUMMARY */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* MAIN GRID */}
+      <div className="grid grid-cols-1 2xl:grid-cols-[1.3fr_0.8fr] gap-6">
         {/* PRODUCTS */}
-        <motion.div
-          whileHover={{ y: -5 }}
-          className="rounded-3xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-5"
-        >
-          <div className="flex justify-between items-center">
+        <div className="rounded-[36px] border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-6">
+          {/* HEADER */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
-              <p className="text-sm text-gray-500 dark:text-white/50">
-                Products
-              </p>
+              <h2 className="text-3xl font-black">Products</h2>
 
-              <h2 className="text-4xl font-black mt-2">
-                {formatNumber(products.length)}
-              </h2>
+              <p className="text-sm text-gray-500 dark:text-white/50 mt-1">
+                Select products to create invoice
+              </p>
             </div>
 
-            <div className="h-14 w-14 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-xl">
-              <FaBox />
+            <div className="flex items-center gap-3">
+              <div className="px-4 py-2 rounded-2xl bg-blue-500/10 text-blue-500 text-sm font-black">
+                {filteredProducts.length} Products
+              </div>
+
+              <div className="px-4 py-2 rounded-2xl bg-green-500/10 text-green-500 text-sm font-black">
+                {products.filter((p) => p.stock > 0).length} In Stock
+              </div>
             </div>
           </div>
-        </motion.div>
 
-        {/* CART */}
-        <motion.div
-          whileHover={{ y: -5 }}
-          className="rounded-3xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-5"
-        >
-          <div className="flex justify-between items-center">
+          {/* PRODUCTS GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {filteredProducts.map((p) => {
+              const lowStock = p.stock <= 5;
+
+              return (
+                <motion.div
+                  key={p.id}
+                  whileHover={{ y: -5, scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => addToCart(p)}
+                  className={`group cursor-pointer relative overflow-hidden rounded-[32px] p-6 border transition-all duration-300 ${
+                    lowStock
+                      ? "border-red-500/20 bg-red-500/[0.04]"
+                      : "border-black/10 dark:border-white/10 bg-gray-50 dark:bg-white/[0.03] hover:border-blue-500/20"
+                  }`}
+                >
+                  {/* HOVER GLOW */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 bg-gradient-to-br from-blue-500/[0.03] via-transparent to-purple-500/[0.03]" />
+
+                  <div className="relative flex justify-between items-start gap-4">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-black text-2xl break-words leading-tight">
+                        {p.product_name}
+                      </h3>
+
+                      <div className="flex flex-wrap gap-2 mt-5">
+                        <span className="px-3 py-1 rounded-full text-xs font-black bg-blue-500/10 text-blue-500">
+                          {p.bike_type}
+                        </span>
+
+                        <span className="px-3 py-1 rounded-full text-xs font-black bg-yellow-500/10 text-yellow-500">
+                          {p.quality}
+                        </span>
+
+                        <span className="px-3 py-1 rounded-full text-xs font-black bg-green-500/10 text-green-500">
+                          {p.model || "NEW"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {lowStock ? (
+                      <div className="h-12 w-12 rounded-2xl bg-red-500/10 text-red-500 flex items-center justify-center flex-shrink-0">
+                        <FaExclamationTriangle />
+                      </div>
+                    ) : (
+                      <div className="h-12 w-12 rounded-2xl bg-green-500/10 text-green-500 flex items-center justify-center flex-shrink-0">
+                        <FaCheckCircle />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* BOTTOM */}
+                  <div className="relative mt-7 flex justify-between items-end">
+                    <div>
+                      <p className="text-xs text-gray-500 dark:text-white/40 uppercase font-bold">
+                        Available Stock
+                      </p>
+
+                      <h4
+                        className={`text-3xl font-black mt-1 ${
+                          lowStock ? "text-red-500" : "text-green-500"
+                        }`}
+                      >
+                        {formatNumber(p.stock)}
+                      </h4>
+                    </div>
+
+                    <div className="px-4 py-2 rounded-2xl bg-black/5 dark:bg-white/5 text-xs font-black">
+                      Click to Add
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* BILL PANEL */}
+        <div className="rounded-[36px] border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-6 flex flex-col h-fit sticky top-4">
+          {/* HEADER */}
+          <div className="flex justify-between items-center mb-6">
             <div>
-              <p className="text-sm text-gray-500 dark:text-white/50">
-                Cart Items
-              </p>
-
-              <h2 className="text-4xl font-black mt-2">
-                {formatNumber(cart.length)}
+              <h2 className="text-3xl font-black">
+                Create Bill
               </h2>
+
+              <p className="text-sm text-gray-500 dark:text-white/50 mt-1">
+                Manage cart and generate invoice
+              </p>
             </div>
 
-            <div className="h-14 w-14 rounded-2xl bg-green-500/10 text-green-500 flex items-center justify-center text-xl">
+            <div className="h-14 w-14 rounded-3xl bg-green-500/10 text-green-500 flex items-center justify-center text-xl">
               <FaShoppingCart />
             </div>
           </div>
-        </motion.div>
 
-        {/* TOTAL */}
-        <motion.div
-          whileHover={{ y: -5 }}
-          className="rounded-3xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-5"
-        >
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-white/50">
-                Total Amount
-              </p>
-
-              <h2 className="text-4xl font-black mt-2 break-words">
-                Rs {formatNumber(total)}
-              </h2>
+          {/* CLIENT */}
+          <div className="flex items-center gap-4 px-5 py-4 rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 mb-6">
+            <div className="h-12 w-12 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
+              <FaUser />
             </div>
 
-            <div className="h-14 w-14 rounded-2xl bg-yellow-500/10 text-yellow-500 flex items-center justify-center text-xl">
-              <FaFileInvoice />
+            <div className="flex-1">
+              <p className="text-xs text-gray-500 dark:text-white/40 mb-1">
+                Client Name
+              </p>
+
+              <input
+                placeholder="Enter customer name..."
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                className="bg-transparent outline-none w-full font-semibold placeholder:text-gray-400"
+              />
             </div>
           </div>
-        </motion.div>
-      </div>
 
-      {/* PRODUCTS SECTION */}
-      <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-5">
-        <div className="flex justify-between items-center mb-5">
-          <h2 className="text-2xl font-black">Products</h2>
-
-          <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-xs font-bold">
-            {filteredProducts.length} Items
-          </span>
-        </div>
-
-        {/* CHANGED TO 2 COLUMNS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {filteredProducts.map((p) => {
-            const lowStock = p.stock <= 5;
-
-            return (
-              <motion.div
-                key={p.id}
-                whileHover={{ y: -4 }}
-                onClick={() => addToCart(p)}
-                className={`cursor-pointer rounded-3xl p-6 border transition-all duration-300 ${
-                  lowStock
-                    ? "border-red-500/20 bg-red-500/[0.05]"
-                    : "border-black/10 dark:border-white/10 bg-gray-50 dark:bg-white/[0.03]"
-                }`}
-              >
-                <div className="flex justify-between items-start gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-black text-2xl break-words">
-                      {p.product_name}
-                    </h3>
-
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-500/10 text-blue-500">
-                        {p.bike_type}
-                      </span>
-
-                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-yellow-500/10 text-yellow-500">
-                        {p.quality}
-                      </span>
-
-                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-500">
-                        {p.model || "NEW"}
-                      </span>
-                    </div>
-                  </div>
-
-                  {lowStock && (
-                    <div className="text-red-500 text-xl flex-shrink-0">
-                      <FaExclamationTriangle />
-                    </div>
-                  )}
+          {/* CART */}
+          <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
+            {cart.length === 0 ? (
+              <div className="rounded-[32px] border border-dashed border-black/10 dark:border-white/10 p-10 text-center">
+                <div className="h-20 w-20 mx-auto rounded-3xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-3xl mb-5">
+                  <FaShoppingCart />
                 </div>
 
-                <div className="mt-6 flex justify-between items-center">
-                  <span className="text-sm text-gray-500 dark:text-white/50">
-                    Available Stock
-                  </span>
+                <h3 className="font-black text-2xl">
+                  Cart is Empty
+                </h3>
 
-                  <span
-                    className={`text-2xl font-black ${
-                      lowStock ? "text-red-500" : "text-green-500"
-                    }`}
-                  >
-                    {formatNumber(p.stock)}
-                  </span>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* CREATE BILL SECTION */}
-      <div className="rounded-3xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#0a0a0a] p-5 flex flex-col">
-        {/* HEADER */}
-        <div className="flex justify-between items-center mb-5">
-          <h2 className="text-2xl font-black">Create Bill</h2>
-
-          <span className="px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-bold">
-            {cart.length} Added
-          </span>
-        </div>
-
-        {/* CLIENT */}
-        <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 mb-5">
-          <FaUser className="text-gray-400" />
-
-          <input
-            placeholder="Client Name"
-            value={clientName}
-            onChange={(e) => setClientName(e.target.value)}
-            className="bg-transparent outline-none w-full placeholder:text-gray-400"
-          />
-        </div>
-
-        {/* CART */}
-        <div className="space-y-4">
-          {cart.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-black/10 dark:border-white/10 p-10 text-center">
-              <FaShoppingCart className="mx-auto text-4xl text-gray-400 mb-4" />
-
-              <h3 className="font-bold text-lg">Cart is Empty</h3>
-
-              <p className="text-sm text-gray-500 dark:text-white/50 mt-2">
-                Click products to add items
-              </p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 xl:grid-cols-2 gap-4">
-              {cart.map((item) => {
+                <p className="text-sm text-gray-500 dark:text-white/50 mt-2">
+                  Click products to add items
+                </p>
+              </div>
+            ) : (
+              cart.map((item) => {
                 const isOut = item.quantity > item.stock;
 
                 return (
                   <motion.div
                     key={item.id}
                     whileHover={{ y: -2 }}
-                    className={`rounded-3xl p-5 border ${
+                    className={`rounded-[32px] p-5 border ${
                       isOut
-                        ? "border-red-500/30 bg-red-500/[0.05]"
+                        ? "border-red-500/20 bg-red-500/[0.04]"
                         : "border-black/10 dark:border-white/10 bg-gray-50 dark:bg-white/[0.03]"
                     }`}
                   >
                     {/* TOP */}
                     <div className="flex justify-between gap-4">
                       <div className="min-w-0">
-                        <h3 className="font-black break-words text-lg">
+                        <h3 className="font-black text-lg break-words">
                           {item.product_name}
                         </h3>
 
-                        <p className="text-sm text-gray-500 dark:text-white/50 mt-1">
-                          Stock: {formatNumber(item.stock)}
-                        </p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <FaLayerGroup className="text-gray-400 text-xs" />
+
+                          <p className="text-sm text-gray-500 dark:text-white/50">
+                            Stock: {formatNumber(item.stock)}
+                          </p>
+                        </div>
 
                         {isOut && (
-                          <p className="text-red-500 text-xs mt-1">
+                          <p className="text-red-500 text-xs mt-2 font-bold">
                             Not enough stock available
                           </p>
                         )}
@@ -585,7 +716,7 @@ export default function Bill() {
 
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="h-10 w-10 rounded-2xl bg-red-500/10 text-red-500 flex items-center justify-center hover:scale-105 transition-all flex-shrink-0"
+                        className="h-11 w-11 rounded-2xl bg-red-500/10 text-red-500 flex items-center justify-center hover:scale-105 transition-all duration-300 flex-shrink-0"
                       >
                         <FaTrash />
                       </button>
@@ -593,77 +724,94 @@ export default function Bill() {
 
                     {/* INPUTS */}
                     <div className="grid grid-cols-2 gap-3 mt-5">
-                      <input
-                        type="number"
-                        value={item.quantity}
-                        onChange={(e) =>
-                          updateQty(item.id, parseInt(e.target.value))
-                        }
-                        placeholder="Qty"
-                        className="w-full rounded-2xl px-4 py-3 border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 outline-none"
-                      />
+                      <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 px-4 py-3">
+                        <p className="text-xs text-gray-500 dark:text-white/40 mb-1">
+                          Quantity
+                        </p>
 
-                      <input
-                        type="number"
-                        placeholder="Price"
-                        value={item.price}
-                        onChange={(e) =>
-                          updatePrice(item.id, e.target.value)
-                        }
-                        className="w-full rounded-2xl px-4 py-3 border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 outline-none"
-                      />
+                        <input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) =>
+                            updateQty(
+                              item.id,
+                              parseInt(e.target.value)
+                            )
+                          }
+                          className="w-full bg-transparent outline-none font-semibold"
+                        />
+                      </div>
+
+                      <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 px-4 py-3">
+                        <p className="text-xs text-gray-500 dark:text-white/40 mb-1">
+                          Price
+                        </p>
+
+                        <input
+                          type="number"
+                          placeholder="0"
+                          value={item.price}
+                          onChange={(e) =>
+                            updatePrice(item.id, e.target.value)
+                          }
+                          className="w-full bg-transparent outline-none font-semibold"
+                        />
+                      </div>
                     </div>
 
                     {/* SUBTOTAL */}
-                    <div className="mt-4 flex justify-between items-center">
+                    <div className="mt-5 pt-5 border-t border-black/5 dark:border-white/5 flex justify-between items-center">
                       <span className="text-sm text-gray-500 dark:text-white/50">
                         Subtotal
                       </span>
 
-                      <span className="font-black text-lg">
+                      <span className="font-black text-2xl">
                         Rs{" "}
                         {formatNumber(
-                          item.quantity * (parseFloat(item.price) || 0)
+                          item.quantity *
+                            (parseFloat(item.price) || 0)
                         )}
                       </span>
                     </div>
                   </motion.div>
                 );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* TOTAL */}
-        <div className="mt-5 rounded-3xl border border-black/10 dark:border-white/10 bg-gray-100 dark:bg-black/20 p-5">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-white/50">
-                Total Amount
-              </p>
-
-              <h2 className="text-4xl font-black mt-2 break-words">
-                Rs {formatNumber(total)}
-              </h2>
-            </div>
-
-            <div className="h-14 w-14 rounded-2xl bg-green-500/10 text-green-500 flex items-center justify-center text-xl">
-              <FaPrint />
-            </div>
+              })
+            )}
           </div>
 
-          {/* SAVE BUTTON */}
-          <button
-            onClick={saveBill}
-            disabled={loading || hasStockIssue}
-            className={`mt-5 w-full py-4 rounded-2xl font-black transition-all duration-300 ${
-              hasStockIssue
-                ? "bg-red-500 text-white cursor-not-allowed"
-                : "bg-green-500 hover:bg-green-600 text-black"
-            }`}
-          >
-            {loading ? "Saving..." : "Save & Print Invoice"}
-          </button>
+          {/* TOTAL */}
+          <div className="mt-6 rounded-[32px] border border-black/10 dark:border-white/10 bg-gradient-to-br from-green-500/[0.06] to-emerald-500/[0.04] p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-white/50">
+                  Total Amount
+                </p>
+
+                <h2 className="text-5xl font-black mt-2 break-words">
+                  Rs {formatNumber(total)}
+                </h2>
+              </div>
+
+              <div className="h-16 w-16 rounded-3xl bg-green-500/10 text-green-500 flex items-center justify-center text-2xl">
+                <FaPrint />
+              </div>
+            </div>
+
+            {/* BUTTON */}
+            <button
+              onClick={saveBill}
+              disabled={loading || hasStockIssue}
+              className={`mt-6 w-full py-4 rounded-3xl font-black text-lg transition-all duration-300 ${
+                hasStockIssue
+                  ? "bg-red-500 text-white cursor-not-allowed"
+                  : "bg-green-500 hover:bg-green-600 hover:scale-[1.01] text-black shadow-xl shadow-green-500/20"
+              }`}
+            >
+              {loading
+                ? "Saving Invoice..."
+                : "Save & Print Invoice"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
