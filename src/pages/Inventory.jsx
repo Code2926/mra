@@ -87,7 +87,7 @@ export default function Inventory() {
   }, []);
 
   const addStock = async (item) => {
-  const value = Number(inputs[item.id]);
+  const value = parseInt(inputs[item.id], 10);
 
   if (!value || value <= 0) {
     return toast.error("Enter valid quantity");
@@ -154,7 +154,7 @@ export default function Inventory() {
 };
 
   const deductStock = async (item) => {
-  const value = Number(inputs[item.id]);
+  const value = parseInt(inputs[item.id], 10);
 
   if (!value || value <= 0) {
     return toast.error("Enter valid quantity");
@@ -230,7 +230,11 @@ export default function Inventory() {
     0
   );
 
-  const lowStockItems = items.filter((item) => item.stock <= 99);
+  const LOW_STOCK_THRESHOLD = 500;
+
+const lowStockItems = items.filter(
+  (item) => Number(item.stock || 0) <= LOW_STOCK_THRESHOLD
+);
 
   return (
     <div className="space-y-6 text-black dark:text-white">
