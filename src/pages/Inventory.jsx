@@ -537,7 +537,7 @@ export default function Inventory() {
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
 
           {filteredItems.map((item) => {
-            const lowStock = item.stock <= 5;
+            const lowStock = item.stock <= 100;
 
             return (
               <motion.div
