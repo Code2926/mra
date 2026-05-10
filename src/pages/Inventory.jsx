@@ -545,7 +545,8 @@ const lowStockItems = items.filter(
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
 
           {filteredItems.map((item) => {
-            const lowStock = item.stock <= 99;
+            const lowStock =
+  Number(item.stock || 0) <= LOW_STOCK_THRESHOLD;
 
             return (
               <motion.div
