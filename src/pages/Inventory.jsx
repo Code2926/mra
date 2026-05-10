@@ -104,48 +104,49 @@ export default function Inventory() {
     return toast.error("Enter valid quantity");
   }
 
+  const previousStock = Number(item.stock || 0);
+  const newStock = previousStock + value;
+
   /* UPDATE PRODUCT STOCK */
-  const { error: stockError } =
-    await supabase
-      .from("products")
-      .update({
-        stock:
-          item.stock + value,
-      })
-      .eq("id", item.id);
+  const { error: stockError } = await supabase
+    .from("products")
+    .update({
+      stock: newStock,
+    })
+    .eq("id", item.id);
 
   if (stockError) {
-    return toast.error(
-      "Stock update failed"
-    );
+    return toast.error("Stock update failed");
   }
 
-  /* CREATE STOCK LOG */
-  const { error: logError } =
-    await supabase
-      .from("stock_logs")
-      .insert([
-        {
-          product_id:
-            item.id,
-          quantity: value,
-          type: "IN",
-        },
-      ]);
+  /* CREATE MOVEMENT LOG */
+  const { error: movementError } = await supabase
+    .from("stock_movements")
+    .insert([
+      {
+        product_id: item.id,
 
-  if (logError) {
-    console.error(
-      logError
-    );
+        movement_type: "IN",
 
-    return toast.error(
-      "Stock log failed"
-    );
+        quantity: value,
+
+        previous_stock: previousStock,
+
+        new_stock: newStock,
+
+        reference_type: "manual",
+
+        note: "Manual stock added from inventory page",
+      },
+    ]);
+
+  if (movementError) {
+    console.error(movementError);
+
+    return toast.error("Movement log failed");
   }
 
-  toast.success(
-    "Stock Added"
-  );
+  toast.success("Stock Added");
 
   setInputs({
     ...inputs,
@@ -162,56 +163,54 @@ export default function Inventory() {
     return toast.error("Enter valid quantity");
   }
 
-  if (
-    item.stock - value < 0
-  ) {
-    return toast.error(
-      "Not enough stock"
-    );
+  const previousStock = Number(item.stock || 0);
+
+  if (previousStock - value < 0) {
+    return toast.error("Not enough stock");
   }
+
+  const newStock = previousStock - value;
 
   /* UPDATE PRODUCT STOCK */
-  const { error: stockError } =
-    await supabase
-      .from("products")
-      .update({
-        stock:
-          item.stock - value,
-      })
-      .eq("id", item.id);
+  const { error: stockError } = await supabase
+    .from("products")
+    .update({
+      stock: newStock,
+    })
+    .eq("id", item.id);
 
   if (stockError) {
-    return toast.error(
-      "Stock update failed"
-    );
+    return toast.error("Stock update failed");
   }
 
-  /* CREATE STOCK LOG */
-  const { error: logError } =
-    await supabase
-      .from("stock_logs")
-      .insert([
-        {
-          product_id:
-            item.id,
-          quantity: value,
-          type: "OUT",
-        },
-      ]);
+  /* CREATE MOVEMENT LOG */
+  const { error: movementError } = await supabase
+    .from("stock_movements")
+    .insert([
+      {
+        product_id: item.id,
 
-  if (logError) {
-    console.error(
-      logError
-    );
+        movement_type: "OUT",
 
-    return toast.error(
-      "Stock log failed"
-    );
+        quantity: value,
+
+        previous_stock: previousStock,
+
+        new_stock: newStock,
+
+        reference_type: "manual",
+
+        note: "Manual stock deducted from inventory page",
+      },
+    ]);
+
+  if (movementError) {
+    console.error(movementError);
+
+    return toast.error("Movement log failed");
   }
 
-  toast.success(
-    "Stock Deducted"
-  );
+  toast.success("Stock Deducted");
 
   setInputs({
     ...inputs,
