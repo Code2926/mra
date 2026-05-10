@@ -156,7 +156,7 @@ export default function Dashboard() {
       );
 
       const lowStock = products.filter(
-        (p) => Number(p.stock || 0) <= 100
+        (p) => Number(p.stock || 0) <= 99
       );
 
       setStats({
