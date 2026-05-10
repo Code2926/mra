@@ -86,19 +86,8 @@ export default function Inventory() {
     };
   }, []);
 
-  const updateStock = async (id, newStock) => {
-    if (newStock < 0) return;
-
-    const { error } = await supabase
-      .from("products")
-      .update({ stock: newStock })
-      .eq("id", id);
-
-    if (error) toast.error("Stock update failed");
-  };
-
   const addStock = async (item) => {
-  const value = parseInt(inputs[item.id] || 0);
+  const value = Number(inputs[item.id]);
 
   if (!value || value <= 0) {
     return toast.error("Enter valid quantity");
@@ -165,7 +154,7 @@ export default function Inventory() {
 };
 
   const deductStock = async (item) => {
-  const value = parseInt(inputs[item.id] || 0);
+  const value = Number(inputs[item.id]);
 
   if (!value || value <= 0) {
     return toast.error("Enter valid quantity");
