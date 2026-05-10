@@ -145,10 +145,10 @@ export default function Inventory() {
 
   toast.success("Stock Added");
 
-  setInputs({
-    ...inputs,
-    [item.id]: "",
-  });
+  setInputs((prev) => ({
+  ...prev,
+  [item.id]: "",
+}));
 
   fetchItems();
 };
@@ -217,10 +217,10 @@ export default function Inventory() {
 
   toast.success("Stock Deducted");
 
-  setInputs({
-    ...inputs,
-    [item.id]: "",
-  });
+  setInputs((prev) => ({
+  ...prev,
+  [item.id]: "",
+}));
 
   fetchItems();
 };
@@ -654,10 +654,10 @@ export default function Inventory() {
                       placeholder="Enter quantity"
                       value={inputs[item.id] || ""}
                       onChange={(e) =>
-                        setInputs({
-                          ...inputs,
-                          [item.id]: e.target.value,
-                        })
+                        setInputs((prev) => ({
+  ...prev,
+  [item.id]: e.target.value,
+}))
                       }
                       className="
                         w-full
