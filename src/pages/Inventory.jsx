@@ -213,10 +213,18 @@ export default function Inventory() {
     ]);
 
   if (movementError) {
-    console.error(movementError);
+  console.error(movementError);
 
-    return toast.error("Movement log failed");
-  }
+  // rollback stock
+  await supabase
+    .from("products")
+    .update({
+      stock: previousStock,
+    })
+    .eq("id", item.id);
+
+  return toast.error("Movement log failed");
+}
 
   toast.success("Stock Deducted");
 
