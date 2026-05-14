@@ -289,6 +289,11 @@ export default function Inventory() {
               <h2 className="text-3xl font-black mt-3 leading-tight text-red-500">
                 {formatNumber(lowStockItems.length)}
               </h2>
+              {/* ADD THIS - TREND INDICATOR */}
+              <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-bold text-red-500">
+                <FaExclamationTriangle />
+                Alert
+              </div>
             </div>
 
             <div className="h-14 w-14 rounded-2xl bg-red-500/10 border border-red-500/10 flex items-center justify-center text-xl shrink-0 text-red-500">
