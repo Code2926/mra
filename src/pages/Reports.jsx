@@ -268,7 +268,7 @@ export default function Reports() {
     0
   );
 
-  const lowStockProducts = products.filter((p) => Number(p.stock || 0) <= 5);
+  const lowStockProducts = products.filter((p) => Number(p.stock || 0) <= 99);
 
   const todaySales = bills
     .filter((b) => {
