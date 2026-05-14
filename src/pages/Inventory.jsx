@@ -239,8 +239,8 @@ const getStockStatus = (stock) => {
   };
 };
 
-  const lowStockItems = items.filter(
-  (item) => getStockStatus(item.stock).low
+const lowStockItems = items.filter((item) =>
+  getStockStatus(item.stock).low
 );
 
   return (
@@ -552,8 +552,7 @@ const getStockStatus = (stock) => {
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
 
           {filteredItems.map((item) => {
-            const lowStock =
-  Number(item.stock || 0) <= LOW_STOCK_THRESHOLD;
+            const lowStock = getStockStatus(item.stock).low;
 
             return (
               <motion.div
