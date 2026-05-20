@@ -502,7 +502,7 @@ export default function Inventory() {
                         </span>
 
                         <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-500">
-                          {item.model || "NEW"}
+                          {item.model ? item.model : ""}
                         </span>
                       </div>
                     </div>
